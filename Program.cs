@@ -5,9 +5,17 @@ using proyectogranja1.Data;
 // Crear el builder de la aplicación
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuración de la base de datos
-var connectionString = builder.Configuration.GetConnectionString("proyectogranja1Context") ?? 
-    throw new InvalidOperationException("Connection string 'proyectogranja1Context' not found.");
+// ✅ CONFIGURACIÓN CORRECTA DE BASE DE DATOS
+var connectionString = Environment.GetEnvironmentVariable("DATABASE") ??
+                      builder.Configuration.GetConnectionString("proyectogranja1Context") ??
+                      throw new InvalidOperationException("No se encontró connection string");
+
+// Mostrar la cadena (segura - sin password)
+var safeConnectionString = connectionString.Contains("Password=")
+    ? connectionString.Replace(connectionString.Split(';')
+        .FirstOrDefault(x => x.StartsWith("Password=")) ?? "Password=***", "Password=***")
+    : connectionString;
+Console.WriteLine($"🔗 Cadena de conexión: {safeConnectionString}");
 
 // Configuración del DbContext principal
 builder.Services.AddDbContext<proyectogranja1Context>(options =>
@@ -17,27 +25,17 @@ builder.Services.AddDbContext<proyectogranja1Context>(options =>
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
     {
-        // Configuración para devolver errores de validación automáticamente
         options.SuppressModelStateInvalidFilter = false;
     });
 
-// Configuración de CORS - Configuración permisiva para desarrollo y pruebas
+// ✅ CORS PERMISIVO - PARA QUE TODOS PUEDAN ENTRAR
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:5000", "https://localhost:5001", "http://localhost:3000", "http://localhost:4200")
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .SetIsOriginAllowed(origin => true);
-    });
-
-    // Política permisiva para desarrollo
-    options.AddPolicy("Permisiva", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        policy.AllowAnyOrigin()    // ✅ Cualquier dominio puede acceder
+              .AllowAnyMethod()    // ✅ Cualquier método (GET, POST, etc.)
+              .AllowAnyHeader();   // ✅ Cualquier header
     });
 });
 
@@ -51,6 +49,21 @@ builder.Services.AddSwaggerGen(c =>
 // Construir la aplicación
 var app = builder.Build();
 
+// ✅ APLICAR MIGRACIONES AUTOMÁTICAMENTE
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<proyectogranja1Context>();
+        dbContext.Database.Migrate();
+        Console.WriteLine("✅ Migraciones aplicadas correctamente");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Error aplicando migraciones: {ex.Message}");
+    }
+}
+
 // Configurar el pipeline de solicitudes HTTP
 if (app.Environment.IsDevelopment())
 {
@@ -58,10 +71,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors();
+app.UseCors(); // ✅ Usa la política por defecto (permisiva)
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-// Iniciar la aplicación
-app.Run();
+// ✅ CONFIGURACIÓN DEL PUERTO PARA RAILWAY
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Run($"http://0.0.0.0:{port}");

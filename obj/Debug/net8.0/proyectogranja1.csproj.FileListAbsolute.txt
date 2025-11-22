@@ -238,3 +238,4 @@ D:\universidad abanse\programacion web 2\baquent\proyectogranja1\obj\Debug\net8.
 D:\universidad abanse\programacion web 2\baquent\proyectogranja1\obj\Debug\net8.0\proyectogranja1.pdb
 D:\universidad abanse\programacion web 2\baquent\proyectogranja1\obj\Debug\net8.0\proyectogranja1.genruntimeconfig.cache
 D:\universidad abanse\programacion web 2\baquent\proyectogranja1\obj\Debug\net8.0\ref\proyectogranja1.dll
+D:\universidad abanse\programacion web 2\baquent\proyectogranja1\obj\Debug\net8.0\proyectogranja1.sourcelink.json
