@@ -49,18 +49,51 @@ builder.Services.AddSwaggerGen(c =>
 // Construir la aplicación
 var app = builder.Build();
 
-// ✅ APLICAR MIGRACIONES AUTOMÁTICAMENTE
+// ✅✅✅ MIGRACIONES MEJORADAS CON MÁS INFORMACIÓN
 using (var scope = app.Services.CreateScope())
 {
     try
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<proyectogranja1Context>();
+
+        Console.WriteLine("🎯 INICIANDO APLICACIÓN DE MIGRACIONES EN RAILWAY...");
+
+        // Verificar si la base de datos existe y puede conectarse
+        var canConnect = dbContext.Database.CanConnect();
+        Console.WriteLine($"📊 ¿Puede conectar a la BD?: {canConnect}");
+
+        // Obtener migraciones pendientes
+        var migraciones = dbContext.Database.GetPendingMigrations();
+        Console.WriteLine($"📋 Migraciones pendientes: {migraciones.Count()}");
+
+        foreach (var migracion in migraciones)
+        {
+            Console.WriteLine($"   - {migracion}");
+        }
+
+        // Aplicar migraciones
         dbContext.Database.Migrate();
-        Console.WriteLine("✅ Migraciones aplicadas correctamente");
+        Console.WriteLine("✅✅✅ MIGRACIONES APLICADAS CORRECTAMENTE");
+
+        // Verificar tablas creadas
+        var tablas = dbContext.Database.SqlQueryRaw<string>(
+            "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'").ToList();
+
+        Console.WriteLine($"📊 Total de tablas creadas: {tablas.Count}");
+        foreach (var tabla in tablas)
+        {
+            Console.WriteLine($"   - {tabla}");
+        }
+
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"❌ Error aplicando migraciones: {ex.Message}");
+        Console.WriteLine($"❌❌❌ ERROR EN MIGRACIONES: {ex.Message}");
+        if (ex.InnerException != null)
+        {
+            Console.WriteLine($"🔍 Detalle interno: {ex.InnerException.Message}");
+        }
+        // No relanzar la excepción para que la aplicación pueda iniciar
     }
 }
 
