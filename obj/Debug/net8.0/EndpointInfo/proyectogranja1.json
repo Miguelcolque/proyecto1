@@ -807,6 +807,223 @@
         }
       }
     },
+    "/api/SolicitudesFabrica": {
+      "get": {
+        "tags": [
+          "SolicitudesFabrica"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": { }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "SolicitudesFabrica"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSolicitudFabricaDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSolicitudFabricaDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSolicitudFabricaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SolicitudFabrica"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SolicitudFabrica"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SolicitudFabrica"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SolicitudesFabrica/{id}": {
+      "get": {
+        "tags": [
+          "SolicitudesFabrica"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SolicitudFabrica"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SolicitudFabrica"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SolicitudFabrica"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "SolicitudesFabrica"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSolicitudFabricaDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSolicitudFabricaDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSolicitudFabricaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "SolicitudesFabrica"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/SolicitudesFabrica/borradas": {
+      "get": {
+        "tags": [
+          "SolicitudesFabrica"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SolicitudFabrica"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SolicitudFabrica"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SolicitudFabrica"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Vacas": {
       "get": {
         "tags": [
@@ -1171,6 +1388,31 @@
         },
         "additionalProperties": false
       },
+      "CreateSolicitudFabricaDto": {
+        "required": [
+          "fecha",
+          "litrosSolicitados"
+        ],
+        "type": "object",
+        "properties": {
+          "litrosSolicitados": {
+            "minimum": 0,1,
+            "type": "number",
+            "format": "double"
+          },
+          "fecha": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "estado": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateVacaDto": {
         "required": [
           "codigoVaca",
@@ -1343,6 +1585,37 @@
           },
           "empleado": {
             "$ref": "#/components/schemas/Empleado"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SolicitudFabrica": {
+        "required": [
+          "estado",
+          "fecha",
+          "litrosSolicitados"
+        ],
+        "type": "object",
+        "properties": {
+          "solicitudFabricaID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "litrosSolicitados": {
+            "type": "number",
+            "format": "double"
+          },
+          "fecha": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "estado": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string"
+          },
+          "activo": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

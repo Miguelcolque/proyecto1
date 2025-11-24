@@ -18,5 +18,6 @@ namespace proyectogranja1.Data
         public DbSet<proyectogranja1.Models.Empleado> Empleado { get; set; } = default!;
         public DbSet<proyectogranja1.Models.Produccion> Produccion { get; set; } = default!;
         public DbSet<proyectogranja1.Models.Distribucion> Distribucion { get; set; } = default!;
+        public DbSet<proyectogranja1.Models.SolicitudFabrica> SolicitudFabrica { get; set; } = default!;
     }
 }

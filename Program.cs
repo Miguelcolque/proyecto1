@@ -109,6 +109,15 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-// ✅ CONFIGURACIÓN DEL PUERTO PARA RAILWAY
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-app.Run($"http://0.0.0.0:{port}");
+// Configuración para Railway y desarrollo local
+if (app.Environment.IsProduction())
+{
+    // Para Railway
+    var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+    app.Run($"http://0.0.0.0:{port}");
+}
+else
+{
+    // Para desarrollo local
+    app.Run();
+}
